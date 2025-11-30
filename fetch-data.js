@@ -1,28 +1,25 @@
-// URL of the API
-const apiURL = 'https://jsonplaceholder.typicode.com/users';
+document.addEventListener('DOMContentLoaded', async () => {
+    const apiUrl = 'https://jsonplaceholder.typicode.com/users';
+    const dataContainer = document.getElementById('api-data');
 
-// Select the div where data will be displayed
-const apiDataDiv = document.getElementById('api-data');
+    try {
+        const response = await fetch(apiUrl);
+        const users = await response.json();
 
-// Fetch data from the API
-fetch(apiURL)
-    .then(response => response.json())
-    .then(users => {
-        // Create a list element
-        const ul = document.createElement('ul');
+        // Clear loading text
+        dataContainer.innerHTML = '';
 
-        // Loop through users and create list items
+        // Create and append user list
+        const userList = document.createElement('ul');
         users.forEach(user => {
             const li = document.createElement('li');
-            li.textContent = user.name; // Display user name
-            ul.appendChild(li);
+            li.textContent = user.name;
+            userList.appendChild(li);
         });
+        dataContainer.appendChild(userList);
 
-        // Clear loading text and append the list
-        apiDataDiv.textContent = '';
-        apiDataDiv.appendChild(ul);
-    })
-    .catch(error => {
-        apiDataDiv.textContent = 'Error fetching user data.';
-        console.error('Error:', error);
-    });
+    } catch (error) {
+        dataContainer.innerHTML = 'Failed to load user data.';
+        console.error('Error fetching data:', error);
+    }
+});
